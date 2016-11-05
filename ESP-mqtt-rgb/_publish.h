@@ -12,5 +12,6 @@ MqttConnector::prepare_data_hook_t on_prepare_data =
     data["myName"] = DEVICE_NAME;
     data["tags"] = "inside,cmmc";
     data["temp"] = t_dht;
-    data["humid"] = h_dht;
+//    data["temp"] = t_dht;
+//    data["humid"] = h_dht;
 };

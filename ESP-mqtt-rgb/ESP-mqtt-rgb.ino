@@ -6,6 +6,40 @@
 #include <DHT.h>
 #include <MqttConnector.h>
 #include "init_mqtt.h"
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+#include <avr/power.h>
+#endif
+
+#define PIN         13
+#define NUMPIXELS   1
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+boolean statusRGB = false;
+
+void rainbow(uint8_t wait) {
+  uint16_t i, j;
+  for (j = 0; j < 256; j++) {
+    for (i = 0; i < pixels.numPixels(); i++) {
+      pixels.setPixelColor(i, Wheel((i + j) & 255));
+    }
+    pixels.show();
+    delay(wait);
+  }
+}
+
+uint32_t Wheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
+  if (WheelPos < 85) {
+    return pixels.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  }
+  if (WheelPos < 170) {
+    WheelPos -= 85;
+    return pixels.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  }
+  WheelPos -= 170;
+  return pixels.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+}
+
 #include "_publish.h"
 #include "_receive.h"
 
@@ -20,7 +54,7 @@ const int PUBLISH_EVERY       = 5000;
 /* DEVICE DATA & FREQUENCY */
 const char *DEVICE_NAME = "CMMC-ROOM-RGB";
 
-#define BUTTON_INPUT_PIN 13
+#define BUTTON_INPUT_PIN 0
 CMMC_Manager manager(BUTTON_INPUT_PIN, LED_BUILTIN);
 
 // Example testing sketch for various DHT humidity/temperature sensors
@@ -70,6 +104,7 @@ void init_hardware()
   pinMode(LED_BUILTIN, OUTPUT);
   delay(200);
   dht.begin();
+  pixels.begin();
 }
 
 void setup()
@@ -82,11 +117,4 @@ void setup()
 void loop()
 {
   mqtt->loop();
-//  timer001.every_ms(2000, read_dht);
-//  interval.every_ms(1000, []() {
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(100);
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(100);
-//  });
 }
