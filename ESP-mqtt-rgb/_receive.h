@@ -5,20 +5,6 @@ PubSubClient::callback_t on_message_arrived =
   String text = topic + " => " + payload;
 
   Serial.println(text);
-
-  if (payload == "r" || payload == "R")  {
-    statusRGB = true;
-  } else {
-    statusRGB = false;
-
-  }
-
-  if (statusRGB == true) {
-    rainbow(20);
-  } else if (statusRGB == false) {
-    pixels.setPixelColor(0, pixels.Color(128, 128, 128));
-    pixels.show();
-  }
 };
 
 

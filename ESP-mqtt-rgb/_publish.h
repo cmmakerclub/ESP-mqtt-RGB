@@ -3,15 +3,19 @@
 extern float t_dht;
 extern float h_dht;
 extern const char* DEVICE_NAME;
+
 MqttConnector::prepare_data_hook_t on_prepare_data =
 [&](JsonObject *root) -> void {
 
-    JsonObject& data = (*root)["d"];
-    JsonObject& info = (*root)["info"];
+  JsonObject& data = (*root)["d"];
+  JsonObject& info = (*root)["info"];
 
-    data["myName"] = DEVICE_NAME;
-    data["tags"] = "inside,cmmc";
-    data["temp"] = t_dht;
-//    data["temp"] = t_dht;
-//    data["humid"] = h_dht;
+  weight = map(analogRead(A0), 0, 700,0, 535);
+  
+  data["myName"] = DEVICE_NAME;
+  data["tags"] = "inside,cmmc";
+  data["weight"] = weight;
+
+  //    data["temp"] = t_dht;
+  //    data["humid"] = h_dht;
 };

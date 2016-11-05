@@ -14,7 +14,7 @@
 #define PIN         13
 #define NUMPIXELS   1
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-boolean statusRGB = false;
+int weight;
 
 void rainbow(uint8_t wait) {
   uint16_t i, j;
@@ -49,7 +49,7 @@ const char* MQTT_PASSWORD    = "";
 const char* MQTT_CLIENT_ID   = "";
 const char* MQTT_PREFIX      = "/CMMC";
 const int MQTT_PORT           = 1883;
-const int PUBLISH_EVERY       = 5000;
+const int PUBLISH_EVERY       = 2000;
 
 /* DEVICE DATA & FREQUENCY */
 const char *DEVICE_NAME = "CMMC-ROOM-RGB";
@@ -117,4 +117,13 @@ void setup()
 void loop()
 {
   mqtt->loop();
+  if (analogRead(A0) > 100)  {
+    rainbow(10);
+  } else {
+    pixels.setPixelColor(0, pixels.Color(128, 128, 128));
+    pixels.show();
+  }
+
+  Serial.println(analogRead(A0));
+  
 }
