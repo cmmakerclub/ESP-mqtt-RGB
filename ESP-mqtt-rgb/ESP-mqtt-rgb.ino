@@ -1,3 +1,7 @@
+/* espert.io
+ * /CMMC/14368034/#
+ */
+ 
 #include <Arduino.h>
 #include <CMMC_Manager.h>
 #include "CMMC_Interval.hpp"
@@ -117,7 +121,7 @@ void setup()
 void loop()
 {
   mqtt->loop();
-  if (analogRead(A0) > 100)  {
+  if (analogRead(A0) > 600)  {
     rainbow(10);
   } else {
     pixels.setPixelColor(0, pixels.Color(128, 128, 128));
